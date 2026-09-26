@@ -1,0 +1,36 @@
+name = "PixelPerfect"
+client_id = "REPLACE_WITH_NEW_APP_CLIENT_ID"
+application_url = "https://slimshot.91.239.208.85.sslip.io"
+embedded = true
+
+
+[access_scopes]
+scopes = "write_products,write_files"
+
+[access.admin]
+direct_api_mode = "online"
+
+[auth]
+redirect_urls = [
+  "https://slimshot.91.239.208.85.sslip.io/auth/callback",
+  "https://slimshot.91.239.208.85.sslip.io/auth/shopify/callback",
+  "https://slimshot.91.239.208.85.sslip.io/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2026-04"
+
+[[webhooks.subscriptions]]
+topics = [ "app/uninstalled" ]
+compliance_topics = [ "customers/redact", "customers/data_request", "shop/redact" ]
+uri = "https://slimshot.91.239.208.85.sslip.io/webhooks/app/uninstalled"
+
+[[webhooks.subscriptions]]
+topics = [ "products/create" ]
+uri = "https://slimshot.91.239.208.85.sslip.io/webhooks/products/create"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = false
