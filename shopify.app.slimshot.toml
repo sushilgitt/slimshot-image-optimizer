@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "136e7031df522160fa515dae47d29207"
-name = " SlimShot"
+name = "SlimShot"
 application_url = "https://slimshot.91.239.208.85.sslip.io"
 embedded = true
 

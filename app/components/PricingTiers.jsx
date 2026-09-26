@@ -16,7 +16,7 @@ import { PLAN_TIERS } from "../planCatalog";
 export default function PricingTiers({ pricingUrl }) {
   return (
     <div style={s.page}>
-      <p style={s.appLabel}>PIXELPERFECT</p>
+      <p style={s.appLabel}>SLIMSHOT</p>
       <h1 style={s.heading}>Pricing that scales with you.</h1>
       <p style={s.subheading}>
         Optimize images, boost speed, and rank higher — pick the plan that fits your catalog.

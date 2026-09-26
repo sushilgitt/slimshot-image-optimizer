@@ -1,4 +1,4 @@
-/* PixelPerfect Brand Theme — Sunset Coral (distinct from ImageGenie purple) */
+/* SlimShot Brand Theme — Sunset Coral (distinct from ImageGenie purple) */
 
 :root {
   --op-1: #FF7A45;            /* sunset orange */
@@ -45,7 +45,7 @@
   border-color: var(--op-accent) !important;
 }
 
-/* ── PixelPerfect hero banner ───────────────────── */
+/* ── SlimShot hero banner ───────────────────── */
 .pb-hero {
   position: relative;
   background: var(--op-grad);

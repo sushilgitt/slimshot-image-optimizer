@@ -684,7 +684,7 @@ export default function AltTextSuggestions() {
 
   return (
     <Page
-      title="PixelPerfect — AI Alt Text Generator"
+      title="SlimShot — AI Alt Text Generator"
       subtitle="One AI caption per product, applied to all its images — saves API usage"
     >
       <Layout>

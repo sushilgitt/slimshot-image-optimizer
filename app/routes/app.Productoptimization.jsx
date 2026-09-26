@@ -477,7 +477,7 @@ export default function ProductOptimization() {
 
   return (
     <Page
-      title="PixelPerfect — Image Optimizer"
+      title="SlimShot — Image Optimizer"
       subtitle="Compress and replace product images with real optimization and automatic WebP conversion"
     >
       <Layout>

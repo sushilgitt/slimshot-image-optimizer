@@ -1,5 +1,5 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
-import "./styles/optipix.css";
+import "./styles/slimshot.css";
 
 export default function App() {
   return (
