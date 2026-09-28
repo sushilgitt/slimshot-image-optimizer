@@ -147,7 +147,8 @@ async function pageSpeedAttempt(apiUrl) {
  * The keyless endpoint is rate-limited, so failures are often transient — we
  * retry with backoff (up to 3 attempts) on 429/5xx/timeout, which makes the
  * test reliable without requiring a GOOGLE_PAGESPEED_API_KEY (one still raises
- * the limits further if set). Returns null only after all attempts fail.
+ * the limits further if set). Throws the last error after all attempts fail,
+ * so the caller can show the merchant the real reason (e.g. quota exceeded).
  */
 async function runPageSpeedTest(url) {
   const apiKey = process.env.GOOGLE_PAGESPEED_API_KEY;
@@ -167,7 +168,12 @@ async function runPageSpeedTest(url) {
     }
   }
   console.error('PageSpeed test failed after retries:', lastErr?.message || lastErr);
-  return null;
+  // The keyless endpoint shares one small daily quota across every caller, so
+  // it's routinely exhausted — point at the fix instead of "try again later".
+  if (/quota exceeded/i.test(lastErr?.message || '') && !apiKey) {
+    lastErr.message = 'Google PageSpeed daily quota exceeded — set GOOGLE_PAGESPEED_API_KEY to use your own quota';
+  }
+  throw lastErr;
 }
 
 /**
