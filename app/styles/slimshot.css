@@ -52,6 +52,7 @@ html:root {
 }
 
 html, body {
+  margin: 0;
   font-family: var(--p-font-family-sans);
 }
 
