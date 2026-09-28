@@ -5,19 +5,8 @@ import { getBillingStateCached } from "../billing.server";
 import { getUsage } from "../usage.server";
 import { entitled } from "../plans.server";
 import db from "../db.server";
-import {
-  Page,
-  Layout,
-  Card,
-  Button,
-  Badge,
-  Text,
-  BlockStack,
-  InlineStack,
-  Box,
-  ProgressBar,
-  Divider,
-} from "@shopify/polaris";
+import { Page, Layout, Button, Badge, Icon, Text, BlockStack, InlineStack } from "@shopify/polaris";
+import { ImageMagicIcon, WandIcon, AutomationIcon, GaugeIcon } from "@shopify/polaris-icons";
 
 export const loader = async ({ request }) => {
   const { admin, session } = await authenticate.admin(request);
@@ -51,149 +40,135 @@ export const loader = async ({ request }) => {
   };
 };
 
+// Circular monthly-usage meter shown in the hero.
+function UsageRing({ used, quota }) {
+  const size = 156;
+  const stroke = 12;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const pct = quota > 0 ? Math.min(1, used / quota) : 0;
+  const left = Math.max(0, quota - used);
+  return (
+    <div className="ss-ring">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={stroke} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={pct >= 1 ? "#FF6B6B" : "#B6F05C"}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - pct)}
+        />
+      </svg>
+      <div className="ss-ring-center">
+        <span className="ss-ring-value">{Number(left).toLocaleString()}</span>
+        <span className="ss-ring-label">{`images left of ${Number(quota).toLocaleString()}`}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const { plan, usage, autoOptimize } = useLoaderData();
 
   const quota = plan.monthlyImages || 0;
   const used = usage?.imagesUsed || 0;
-  const remaining = Math.max(0, quota - used);
-  const pct = quota > 0 ? Math.min(100, Math.round((used / quota) * 100)) : 0;
-  const fmt = (n) => Number(n).toLocaleString();
 
-  const autoStatus = !plan.autoOptimizeAllowed
-    ? { label: "Growth & up", tone: "attention" }
-    : autoOptimize
-      ? { label: "On", tone: "success" }
-      : { label: "Off", tone: undefined };
+  const autoLabel = !plan.autoOptimizeAllowed ? "Locked" : autoOptimize ? "On" : "Off";
 
-  // Tool rows — a horizontal layout, distinct from the old equal 3-card grid.
   const tools = [
     {
-      icon: "⚡",
-      title: "Image Optimizer",
-      desc: "Compress & convert product images to WebP — up to 70% smaller, originals replaced safely.",
-      cta: "Open optimizer",
-      onClick: () => navigate("/app/productoptimization"),
-      available: true,
+      icon: ImageMagicIcon,
+      title: "Compress & convert",
+      desc: "Shrink product photos and serve them as lightweight WebP files, with no visible loss in quality.",
+      cta: "Start compressing",
+      to: "/app/productoptimization",
+      unlocked: true,
     },
     {
-      icon: "✨",
-      title: "AI Alt Text",
-      desc: "Generate SEO alt text for every image with AI vision, then bulk-apply in one click.",
-      cta: plan.altText ? "Generate alt text" : "Upgrade to Starter",
-      onClick: () => navigate(plan.altText ? "/app/alttextsuggestions" : "/app/billing"),
-      available: plan.altText,
-      badge: plan.altText ? undefined : { label: "Starter & up", tone: "attention" },
+      icon: WandIcon,
+      title: "Smart alt text",
+      desc: "AI looks at each product photo and writes descriptive, search-friendly alt text you can apply in bulk.",
+      cta: plan.altText ? "Write alt text" : "Unlock on Starter",
+      to: plan.altText ? "/app/alttextsuggestions" : "/app/billing",
+      unlocked: plan.altText,
+      lockedLabel: "Starter+",
     },
     {
-      icon: "🔁",
-      title: "Auto-optimize new products",
-      desc: "Set & forget — every newly created product gets optimized automatically in the background.",
-      cta: plan.autoOptimizeAllowed ? "Manage" : "Upgrade to Growth",
-      onClick: () => navigate(plan.autoOptimizeAllowed ? "/app/productoptimization" : "/app/billing"),
-      available: plan.autoOptimizeAllowed,
-      badge: autoStatus,
+      icon: AutomationIcon,
+      title: "Autopilot for new products",
+      desc: "Every product you add is compressed automatically in the background, with no clicks needed.",
+      cta: plan.autoOptimizeAllowed ? "Configure autopilot" : "Unlock on Growth",
+      to: plan.autoOptimizeAllowed ? "/app/productoptimization" : "/app/billing",
+      unlocked: plan.autoOptimizeAllowed,
+      lockedLabel: "Growth+",
+      status: plan.autoOptimizeAllowed ? { label: autoLabel, tone: autoOptimize ? "success" : undefined } : null,
     },
     {
-      icon: "📊",
-      title: "Page Speed Reports",
-      desc: "Track Core Web Vitals (LCP, CLS, TBT) and see before/after gains per product page.",
-      cta: plan.pageSpeed ? "View reports" : "Upgrade to Growth",
-      onClick: () => navigate(plan.pageSpeed ? "/app/pagespeedimpactreports" : "/app/billing"),
-      available: plan.pageSpeed,
-      badge: plan.pageSpeed ? undefined : { label: "Growth & up", tone: "attention" },
+      icon: GaugeIcon,
+      title: "Speed insights",
+      desc: "Run live Lighthouse tests on product pages and see how much image weight you've cut.",
+      cta: plan.pageSpeed ? "Open insights" : "Unlock on Growth",
+      to: plan.pageSpeed ? "/app/pagespeedimpactreports" : "/app/billing",
+      unlocked: plan.pageSpeed,
+      lockedLabel: "Growth+",
     },
-  ];
-
-  const stats = [
-    { label: "Current plan", value: plan.name },
-    { label: "Images used", value: fmt(used) },
-    { label: "Images left", value: fmt(remaining) },
-    { label: "Auto-optimize", value: autoStatus.label },
   ];
 
   return (
     <Page>
-      {/* Hero */}
-      <div className="pb-hero">
-        <InlineStack align="space-between" blockAlign="center" wrap={false}>
-          <BlockStack gap="200">
-            <h1>Welcome to SlimShot</h1>
-            <p>Image optimization &amp; SEO suite — compress, auto-generate alt text, and rank faster.</p>
-          </BlockStack>
-          <Button variant="primary" size="large" onClick={() => navigate("/app/productoptimization")}>
-            Optimize images
-          </Button>
-        </InlineStack>
-      </div>
+      <section className="ss-hero">
+        <div>
+          <p className="ss-eyebrow">SlimShot</p>
+          <h1>Lighter images. Faster store.</h1>
+          <p className="ss-hero-sub">
+            Compress product photos, fill in missing alt text, and keep every new product lean automatically.
+          </p>
+          <div className="ss-hero-actions">
+            <button type="button" className="ss-btn-lime" onClick={() => navigate("/app/productoptimization")}>
+              Compress images
+            </button>
+            <button type="button" className="ss-btn-ghost" onClick={() => navigate("/app/billing")}>
+              Plan &amp; usage
+            </button>
+          </div>
+          <div className="ss-chips">
+            <span className="ss-chip">Plan <strong>{plan.name}</strong></span>
+            <span className="ss-chip">Used this month <strong>{used.toLocaleString()}</strong></span>
+            <span className="ss-chip">Autopilot <strong>{autoLabel}</strong></span>
+          </div>
+        </div>
+        <UsageRing used={used} quota={quota} />
+      </section>
 
       <Layout>
-        {/* Dashboard stat strip */}
         <Layout.Section>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
-            {stats.map((s) => (
-              <div key={s.label} className="pb-stat-card">
-                <p className="pb-stat-value">{s.value}</p>
-                <p className="pb-stat-label">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </Layout.Section>
-
-        {/* Monthly usage */}
-        <Layout.Section>
-          <Card>
-            <BlockStack gap="300">
-              <InlineStack align="space-between" blockAlign="center">
-                <InlineStack gap="200" blockAlign="center">
-                  <Text variant="headingSm" as="h2">Monthly image usage</Text>
-                  <Badge tone={plan.tier === "free" ? undefined : "success"}>{`${plan.name} plan`}</Badge>
-                </InlineStack>
-                <Button variant="plain" onClick={() => navigate("/app/billing")}>Manage plan</Button>
-              </InlineStack>
-              <ProgressBar progress={pct} size="small" tone={pct >= 100 ? "critical" : "primary"} />
-              <Text variant="bodySm" as="p" tone="subdued">
-                {`${fmt(used)} of ${fmt(quota)} images this month · ${fmt(remaining)} remaining`}
-              </Text>
-            </BlockStack>
-          </Card>
-        </Layout.Section>
-
-        {/* Tools — horizontal rows */}
-        <Layout.Section>
-          <Card padding="0">
-            <BlockStack gap="0">
-              {tools.map((t, i) => (
-                <div key={t.title}>
-                  {i > 0 && <Divider />}
-                  <Box padding="400">
-                    <InlineStack align="space-between" blockAlign="center" wrap={false} gap="400">
-                      <InlineStack gap="400" blockAlign="center" wrap={false}>
-                        <div className="pb-feature-icon" style={{ marginBottom: 0 }}>{t.icon}</div>
-                        <BlockStack gap="100">
-                          <InlineStack gap="200" blockAlign="center">
-                            <Text variant="headingSm" as="h3">{t.title}</Text>
-                            {t.badge && <Badge tone={t.badge.tone}>{t.badge.label}</Badge>}
-                          </InlineStack>
-                          <Text variant="bodySm" as="p" tone="subdued">{t.desc}</Text>
-                        </BlockStack>
-                      </InlineStack>
-                      <Box minWidth="160px">
-                        <Button
-                          variant={t.available ? "primary" : "secondary"}
-                          onClick={t.onClick}
-                          fullWidth
-                        >
-                          {t.cta}
-                        </Button>
-                      </Box>
-                    </InlineStack>
-                  </Box>
+          <BlockStack gap="300">
+            <Text variant="headingMd" as="h2">Toolkit</Text>
+            <div className="ss-tool-grid">
+              {tools.map((t) => (
+                <div key={t.title} className={`ss-tool${t.unlocked ? "" : " ss-tool--locked"}`}>
+                  <div className="ss-tool-head">
+                    <span className="ss-icon-tile" aria-hidden="true"><Icon source={t.icon} /></span>
+                    {t.status && <Badge tone={t.status.tone}>{t.status.label}</Badge>}
+                    {!t.unlocked && <Badge tone="info">{t.lockedLabel}</Badge>}
+                  </div>
+                  <p className="ss-tool-title">{t.title}</p>
+                  <p className="ss-tool-desc">{t.desc}</p>
+                  <InlineStack>
+                    <Button variant={t.unlocked ? "primary" : "secondary"} onClick={() => navigate(t.to)}>
+                      {t.cta}
+                    </Button>
+                  </InlineStack>
                 </div>
               ))}
-            </BlockStack>
-          </Card>
+            </div>
+          </BlockStack>
         </Layout.Section>
       </Layout>
     </Page>

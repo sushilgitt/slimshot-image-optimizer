@@ -30,6 +30,8 @@ import {
   Banner,
   Button
 } from '@shopify/polaris';
+import { GaugeIcon } from '@shopify/polaris-icons';
+import PageIntro from '../components/PageIntro';
 
 /**
  * Fetch all products from Shopify with optimization data
@@ -468,19 +470,15 @@ export default function PageSpeedImpactReports() {
   ]);
 
   return (
-    <Page
-      title="SlimShot — Page Speed Reports"
-      subtitle="Measured image savings from your optimization runs, plus live PageSpeed tests"
-    >
+    <Page>
       <Layout>
         <Layout.Section>
-          <div className="pb-page-header">
-            <span className="pb-page-header-icon">📊</span>
-            <div>
-              <p className="pb-page-header-title">Page Speed Reports</p>
-              <p className="pb-page-header-sub">Measured image savings &amp; live Core Web Vitals testing</p>
-            </div>
-          </div>
+          <PageIntro
+            icon={GaugeIcon}
+            eyebrow="Insights"
+            title="Speed insights"
+            subtitle="Image weight you have cut, plus live Lighthouse tests for any product page."
+          />
         </Layout.Section>
         {loadError && (
           <Layout.Section>

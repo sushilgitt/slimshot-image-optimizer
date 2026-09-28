@@ -24,6 +24,8 @@ import {
   Select,
   EmptyState
 } from '@shopify/polaris';
+import { ImageMagicIcon } from '@shopify/polaris-icons';
+import PageIntro from '../components/PageIntro';
 
 /* -------------------------------------------------------------------------- */
 /*  Product fetching (loader only)                                            */
@@ -476,19 +478,15 @@ export default function ProductOptimization() {
       }, 0);
 
   return (
-    <Page
-      title="SlimShot — Image Optimizer"
-      subtitle="Compress and replace product images with real optimization and automatic WebP conversion"
-    >
+    <Page>
       <Layout>
         <Layout.Section>
-          <div className="pb-page-header">
-            <span className="pb-page-header-icon">⚡</span>
-            <div>
-              <p className="pb-page-header-title">Image Optimizer</p>
-              <p className="pb-page-header-sub">WebP conversion &amp; smart compression — up to 70% smaller</p>
-            </div>
-          </div>
+          <PageIntro
+            icon={ImageMagicIcon}
+            eyebrow="Compress"
+            title="Compress & convert"
+            subtitle="Re-encode product photos as lean WebP files and swap them in place."
+          />
         </Layout.Section>
 
         {error && (

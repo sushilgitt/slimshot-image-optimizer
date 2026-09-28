@@ -16,37 +16,40 @@ export default function App() {
   const { showForm } = useLoaderData();
 
   return (
-    <div className={styles.index}>
+    <main className={styles.index}>
       <div className={styles.content}>
-        <h1 className={styles.heading}>SlimShot</h1>
+        <p className={styles.eyebrow}>SlimShot for Shopify</p>
+        <h1 className={styles.heading}>Lighter images. Faster store.</h1>
         <p className={styles.text}>
-          Image Optimization & SEO Suite for Shopify stores.
-          Compress images, generate AI alt text, and track performance.
+          SlimShot compresses your product photos, writes the alt text you&apos;re missing,
+          and keeps every new product lean automatically.
         </p>
         {showForm && (
           <Form className={styles.form} method="post" action="/auth/login">
             <label className={styles.label}>
-              <span>Shop domain</span>
-              <input className={styles.input} type="text" name="shop" />
-              <span>e.g: my-shop-domain.myshopify.com</span>
+              <span>Store domain</span>
+              <input className={styles.input} type="text" name="shop" placeholder="your-store.myshopify.com" />
             </label>
             <button className={styles.button} type="submit">
-              Log in
+              Open SlimShot
             </button>
           </Form>
         )}
         <ul className={styles.list}>
           <li>
-            <strong>AI Alt Text Generator</strong>. Generate SEO-optimized alt text for product images using Claude or OpenAI.
+            <strong>Compress &amp; convert</strong>
+            <span>Re-encode product photos as WebP and swap them in place, often more than half the size.</span>
           </li>
           <li>
-            <strong>Smart Image Compression</strong>. Reduce image sizes by up to 70% with automatic WebP conversion.
+            <strong>Smart alt text</strong>
+            <span>AI describes each product photo so shoppers and search engines know what&apos;s in it.</span>
           </li>
           <li>
-            <strong>Performance Reports</strong>. Track Core Web Vitals and PageSpeed improvements in real-time.
+            <strong>Speed insights</strong>
+            <span>Run live Lighthouse tests and see how much image weight you&apos;ve cut.</span>
           </li>
         </ul>
       </div>
-    </div>
+    </main>
   );
 }

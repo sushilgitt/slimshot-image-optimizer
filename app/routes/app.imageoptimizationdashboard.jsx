@@ -15,6 +15,8 @@ import {
   DataTable,
   Banner
 } from '@shopify/polaris';
+import { ChartVerticalIcon } from '@shopify/polaris-icons';
+import PageIntro from '../components/PageIntro';
 
 /**
  * Helper function to calculate date ranges
@@ -443,8 +445,6 @@ export default function ImageOptimizationDashboard() {
 
   return (
     <Page
-      title="SlimShot — Optimization Analytics"
-      subtitle="Measured results from your image optimization runs"
       primaryAction={{ 
         content: 'Export Report', 
         onAction: handleExportReport 
@@ -458,13 +458,12 @@ export default function ImageOptimizationDashboard() {
     >
       <Layout>
         <Layout.Section>
-          <div className="pb-page-header">
-            <span className="pb-page-header-icon">📈</span>
-            <div>
-              <p className="pb-page-header-title">Optimization Analytics</p>
-              <p className="pb-page-header-sub">Size savings, compression rates &amp; format breakdown</p>
-            </div>
-          </div>
+          <PageIntro
+            icon={ChartVerticalIcon}
+            eyebrow="Insights"
+            title="Savings analytics"
+            subtitle="Bytes saved, compression rates and format mix across your catalog."
+          />
         </Layout.Section>
         {loadError && (
           <Layout.Section>

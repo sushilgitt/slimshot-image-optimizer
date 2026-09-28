@@ -1,180 +1,252 @@
-/* SlimShot Brand Theme — Sunset Coral (distinct from ImageGenie purple) */
+/* SlimShot theme — "Deep Lagoon": navy ink, lagoon teal, lime spark.
+ *
+ * Polaris is re-themed through its own design tokens (--p-*) instead of
+ * overriding component classes, so every component (buttons, checkboxes,
+ * focus rings, links, progress bars) picks the palette up consistently.
+ * `html:root` out-ranks Polaris's `:root, .p-theme-light` token block, which
+ * loads later. */
 
-:root {
-  --op-1: #FF7A45;            /* sunset orange */
-  --op-2: #F4476B;            /* coral rose    */
-  --op-accent: #F4476B;
-  --op-accent-dark: #D62F57;
-  --op-ink: #1A1426;          /* warm near-black */
-  --op-soft-1: #FFF1EC;
-  --op-soft-2: #FFE4EC;
-  --op-grad: linear-gradient(135deg, #FF7A45 0%, #F4476B 100%);
-  --op-grad-dark: linear-gradient(135deg, #F4476B 0%, #B91C50 100%);
-  --op-grad-soft: linear-gradient(135deg, #FFF1EC 0%, #FFE4EC 100%);
-  --op-tint: #FFF7F4;         /* page wash */
-  --op-ring: rgba(244, 71, 107, 0.18);
+html:root {
+  --ss-ink: #0B1B2B;
+  --ss-ink-2: #12283D;
+  --ss-teal: #0F9B8E;
+  --ss-teal-dark: #0B7A70;
+  --ss-teal-deep: #075E57;
+  --ss-cyan: #22B8CF;
+  --ss-lime: #B6F05C;
+  --ss-mist: #EEF7F6;
+  --ss-line: #DCE9E7;
+  --ss-muted: #5B6B78;
+  --ss-radius: 14px;
+
+  /* Typography */
+  --p-font-family-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Brand fill (primary buttons, checked checkboxes, selected states) */
+  --p-color-bg-fill-brand: var(--ss-teal);
+  --p-color-bg-fill-brand-hover: var(--ss-teal-dark);
+  --p-color-bg-fill-brand-active: var(--ss-teal-deep);
+  --p-color-bg-fill-brand-selected: var(--ss-teal-dark);
+  --p-color-text-brand-on-bg-fill: #FFFFFF;
+  --p-shadow-button-primary:
+    0 -1px 0 1px rgba(7, 94, 87, 0.75) inset,
+    0 0 0 1px var(--ss-teal) inset,
+    0 0.5px 0 1.5px rgba(255, 255, 255, 0.22) inset;
+  --p-shadow-button-primary-hover:
+    0 1px 0 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 0 rgba(7, 94, 87, 0.9) inset,
+    0 -1px 0 1px var(--ss-teal-deep);
+  --p-shadow-button-primary-inset: 0 3px 0 0 var(--ss-teal-deep) inset;
+
+  /* Links, focus, emphasis */
+  --p-color-text-link: var(--ss-teal-dark);
+  --p-color-text-link-hover: var(--ss-teal-deep);
+  --p-color-text-link-active: var(--ss-teal-deep);
+  --p-color-border-focus: var(--ss-teal);
+  --p-color-border-emphasis: var(--ss-teal);
+  --p-color-bg-fill-emphasis: var(--ss-teal);
+  --p-color-bg-fill-emphasis-hover: var(--ss-teal-dark);
+  --p-color-text-emphasis: var(--ss-teal-dark);
+  --p-color-icon-emphasis: var(--ss-teal);
+  --p-color-bg-surface-selected: var(--ss-mist);
 }
 
-/* ── Primary buttons ───────────────────────── */
-.Polaris-Button--variantPrimary {
-  background: var(--op-grad) !important;
-  border-color: var(--op-2) !important;
-  box-shadow: 0 2px 8px rgba(244, 71, 107, 0.32) !important;
-}
-.Polaris-Button--variantPrimary:hover:not(:disabled) {
-  background: var(--op-grad-dark) !important;
-  border-color: var(--op-accent-dark) !important;
-}
-.Polaris-Button--variantPrimary:active:not(:disabled) {
-  background: linear-gradient(135deg, #D62F57 0%, #8F1740 100%) !important;
+html, body {
+  font-family: var(--p-font-family-sans);
 }
 
-/* ── Links ─────────────────────────────────── */
-.Polaris-Link { color: var(--op-accent) !important; }
-.Polaris-Link:hover { color: var(--op-accent-dark) !important; }
-
-/* ── Focus rings ───────────────────────────── */
-.Polaris-TextField__Input:focus {
-  border-color: var(--op-accent) !important;
-  box-shadow: 0 0 0 3px var(--op-ring) !important;
+/* Progress bars: teal track fill instead of the default dark grey */
+.Polaris-ProgressBar__Indicator--highlightPrimary {
+  background: linear-gradient(90deg, var(--ss-teal) 0%, var(--ss-cyan) 100%) !important;
 }
 
-/* ── Checkboxes ────────────────────────────── */
-.Polaris-Checkbox__Input:checked + .Polaris-Checkbox__Backdrop {
-  background: var(--op-accent) !important;
-  border-color: var(--op-accent) !important;
-}
-
-/* ── SlimShot hero banner ───────────────────── */
-.pb-hero {
+/* ── Home: hero ─────────────────────────────── */
+.ss-hero {
   position: relative;
-  background: var(--op-grad);
-  border-radius: 18px;
-  padding: 36px 32px;
-  color: white;
-  margin-bottom: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: center;
+  background:
+    radial-gradient(circle at 88% 20%, rgba(34, 184, 207, 0.28) 0, transparent 42%),
+    linear-gradient(160deg, var(--ss-ink) 0%, var(--ss-ink-2) 100%);
+  border-radius: 20px;
+  padding: 32px 36px;
+  margin-bottom: 20px;
+  color: #FFFFFF;
   overflow: hidden;
-  box-shadow: 0 14px 40px rgba(244, 71, 107, 0.28);
 }
-.pb-hero::after {
+.ss-hero::before {
+  /* fine dot grid — decorative */
   content: "";
   position: absolute;
-  top: -60px; right: -40px;
-  width: 220px; height: 220px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  pointer-events: none; /* decorative only — must not block the hero button */
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 18px 18px;
+  pointer-events: none;
 }
-.pb-hero h1 {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  margin: 0 0 8px 0;
-  color: white;
-}
-.pb-hero p {
-  font-size: 15px;
-  opacity: 0.92;
-  margin: 0;
-  color: white;
-}
-
-/* ── Stat cards ─────────────────────────────── */
-.pb-stat-card {
-  background: white;
-  border: 1px solid #F1E4DE;
-  border-radius: 14px;
-  padding: 20px;
-  text-align: center;
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-.pb-stat-card:hover {
-  box-shadow: 0 8px 22px rgba(244, 71, 107, 0.14);
-  transform: translateY(-2px);
-}
-.pb-stat-value {
-  font-size: 32px;
-  font-weight: 800;
-  background: var(--op-grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin: 0;
-}
-.pb-stat-label { font-size: 13px; color: #6B7280; margin: 4px 0 0 0; }
-
-/* ── Feature cards ──────────────────────────── */
-.pb-feature-card {
-  background: white;
-  border: 1px solid #F1E4DE;
-  border-radius: 16px;
-  padding: 24px;
-  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
-  height: 100%;
-}
-.pb-feature-card:hover {
-  box-shadow: 0 10px 28px rgba(244, 71, 107, 0.12);
-  border-color: #F8C6B8;
-  transform: translateY(-3px);
-}
-.pb-feature-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: var(--op-grad-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  margin-bottom: 14px;
-}
-.pb-feature-title { font-size: 16px; font-weight: 700; color: var(--op-ink); margin: 0 0 8px 0; }
-.pb-feature-desc { font-size: 13px; color: #6B7280; line-height: 1.5; margin: 0 0 16px 0; }
-.pb-feature-list { list-style: none; padding: 0; margin: 0 0 18px 0; }
-.pb-feature-list li {
-  font-size: 13px; color: #374151;
-  padding: 3px 0 3px 20px; position: relative;
-}
-.pb-feature-list li::before {
-  content: "✓";
-  color: var(--op-accent);
-  position: absolute; left: 0; font-weight: 700;
-}
-
-/* ── Page header accent — solid card w/ left bar (distinct shape) ── */
-.pb-page-header {
-  background: #FFFFFF;
-  border: 1px solid #F1E4DE;
-  border-left: 5px solid transparent;
-  border-image: var(--op-grad) 1;
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  box-shadow: 0 4px 14px rgba(244, 71, 107, 0.07);
-}
-.pb-page-header-icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  background: var(--op-grad);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; line-height: 1;
-  box-shadow: 0 4px 12px rgba(244, 71, 107, 0.3);
-}
-.pb-page-header-title { font-size: 15px; font-weight: 700; color: var(--op-ink); margin: 0; }
-.pb-page-header-sub { font-size: 12px; color: var(--op-accent); opacity: 0.9; margin: 2px 0 0 0; }
-
-/* ── Step badges ────────────────────────────── */
-.pb-step-badge {
+.ss-hero > * { position: relative; }
+.ss-eyebrow {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: var(--op-grad);
-  color: white;
-  font-size: 13px; font-weight: 700;
-  flex-shrink: 0;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ss-lime);
+  margin: 0 0 12px 0;
 }
+.ss-eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ss-lime);
+}
+.ss-hero h1 {
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px 0;
+  color: #FFFFFF;
+}
+.ss-hero p.ss-hero-sub {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 0 20px 0;
+  max-width: 460px;
+}
+.ss-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.ss-btn-lime {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ss-ink);
+  background: var(--ss-lime);
+  padding: 10px 18px;
+  border-radius: 999px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.ss-btn-lime:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(182, 240, 92, 0.35); }
+.ss-btn-ghost {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 9px 16px;
+  border-radius: 999px;
+}
+.ss-btn-ghost:hover { background: rgba(255, 255, 255, 0.08); }
+.ss-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.ss-chip {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.ss-chip strong { color: #FFFFFF; }
+
+/* Usage ring */
+.ss-ring { position: relative; width: 156px; height: 156px; }
+.ss-ring svg { transform: rotate(-90deg); }
+.ss-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.ss-ring-value { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+.ss-ring-label { font-size: 11px; color: rgba(255, 255, 255, 0.65); margin-top: 6px; }
+
+@media (max-width: 640px) {
+  .ss-hero { grid-template-columns: 1fr; padding: 24px; }
+  .ss-ring { margin: 0 auto; }
+}
+
+/* ── Home: tool grid ───────────────────────── */
+.ss-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.ss-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--ss-line);
+  border-radius: var(--ss-radius);
+  padding: 20px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ss-tool:hover { border-color: var(--ss-teal); box-shadow: 0 8px 24px rgba(11, 27, 43, 0.08); }
+.ss-tool--locked { background: #FAFCFC; }
+.ss-tool-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ss-tool-title { font-size: 15px; font-weight: 700; color: var(--ss-ink); margin: 0; }
+.ss-tool-desc { font-size: 13px; line-height: 1.55; color: var(--ss-muted); margin: 0; flex: 1; }
+
+/* Icon tile shared by tools + page intros */
+.ss-icon-tile {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ss-mist);
+  color: var(--ss-teal);
+  border: 1px solid var(--ss-line);
+}
+.ss-icon-tile svg { fill: currentColor; width: 20px; height: 20px; }
+
+/* ── Page intro header (feature pages) ─────── */
+.ss-intro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 0 8px 0;
+  border-bottom: 1px solid var(--ss-line);
+}
+.ss-intro .ss-icon-tile {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--ss-ink);
+  border-color: var(--ss-ink);
+  color: var(--ss-lime);
+}
+.ss-intro-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ss-teal);
+  margin: 0 0 2px 0;
+}
+.ss-intro-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ss-ink);
+  margin: 0;
+}
+.ss-intro-sub { font-size: 13px; color: var(--ss-muted); margin: 2px 0 0 0; }
+
+.ss-check { color: var(--ss-teal); font-weight: 800; }

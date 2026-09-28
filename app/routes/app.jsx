@@ -87,14 +87,14 @@ export default function App() {
           <>
             <ui-nav-menu>
               <a href="/app" rel="home">Home</a>
-              <a href="/app/productoptimization">Image Optimization</a>
+              <a href="/app/productoptimization">Compress Images</a>
               {features?.altText && (
-                <a href="/app/alttextsuggestions">Alt Text Generator</a>
+                <a href="/app/alttextsuggestions">Smart Alt Text</a>
               )}
               {features?.pageSpeed && (
-                <a href="/app/pagespeedimpactreports">Page Speed Reports</a>
+                <a href="/app/pagespeedimpactreports">Speed Insights</a>
               )}
-              <a href="/app/billing">Billing</a>
+              <a href="/app/billing">Plan & Usage</a>
             </ui-nav-menu>
             <Outlet />
           </>

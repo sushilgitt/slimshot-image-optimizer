@@ -35,6 +35,8 @@ import {
   ProgressBar,
   Pagination
 } from '@shopify/polaris';
+import { WandIcon } from '@shopify/polaris-icons';
+import PageIntro from '../components/PageIntro';
 
 const PAGE_SIZE = 20;
 
@@ -683,19 +685,15 @@ export default function AltTextSuggestions() {
   const rangeEnd = Math.min(pageStart + PAGE_SIZE, images.length);
 
   return (
-    <Page
-      title="SlimShot — AI Alt Text Generator"
-      subtitle="One AI caption per product, applied to all its images — saves API usage"
-    >
+    <Page>
       <Layout>
         <Layout.Section>
-          <div className="pb-page-header">
-            <span className="pb-page-header-icon">✨</span>
-            <div>
-              <p className="pb-page-header-title">AI Alt Text Generator</p>
-              <p className="pb-page-header-sub">Powered by OpenAI GPT-4o-mini — one caption per product</p>
-            </div>
-          </div>
+          <PageIntro
+            icon={WandIcon}
+            eyebrow="Accessibility & SEO"
+            title="Smart alt text"
+            subtitle="One AI-written caption per product, applied to every photo of that product."
+          />
         </Layout.Section>
         {error && (
           <Layout.Section>

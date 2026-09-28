@@ -21,6 +21,8 @@ import {
   ProgressBar,
 } from "@shopify/polaris";
 import { boundary } from "@shopify/shopify-app-react-router/server";
+import { CreditCardIcon } from "@shopify/polaris-icons";
+import PageIntro from "../components/PageIntro";
 
 // Human labels for the entitlement flags, shown as the current plan's inclusions.
 const FEATURE_LABELS = {
@@ -109,8 +111,17 @@ export default function BillingPage() {
   const fmt = (n) => Number(n).toLocaleString();
 
   return (
-    <Page title="SlimShot — Billing" subtitle="Manage your plan">
+    <Page>
       <Layout>
+        <Layout.Section>
+          <PageIntro
+            icon={CreditCardIcon}
+            eyebrow="Account"
+            title="Plan & usage"
+            subtitle="Your current plan, what it includes, and this month's image usage."
+          />
+        </Layout.Section>
+
         {actionData?.cancelled && !hasActivePlan && (
           <Layout.Section>
             <Banner title="Subscription cancelled" tone="info">
@@ -163,7 +174,7 @@ export default function BillingPage() {
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
                   {included.map((k) => (
                     <InlineStack key={k} gap="200" blockAlign="center">
-                      <span style={{ color: "#F4476B", fontWeight: 800 }}>✓</span>
+                      <span className="ss-check">✓</span>
                       <Text variant="bodySm" as="span">{FEATURE_LABELS[k]}</Text>
                     </InlineStack>
                   ))}

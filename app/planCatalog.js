@@ -12,7 +12,7 @@ export const PLAN_TIERS = [
     price: 0,
     priceAnnual: 0,
     images: "100",
-    tagline: "Try it out",
+    tagline: "For trying SlimShot",
     features: [
       "100 images / month",
       "WebP conversion & compression",
@@ -24,7 +24,7 @@ export const PLAN_TIERS = [
     price: 19,
     priceAnnual: 190,
     images: "2,000",
-    tagline: "For growing stores",
+    tagline: "Small catalogs",
     features: [
       "2,000 images / month",
       "Everything in Free",
@@ -39,7 +39,7 @@ export const PLAN_TIERS = [
     price: 49,
     priceAnnual: 490,
     images: "15,000",
-    tagline: "Most popular",
+    tagline: "Growing catalogs",
     popular: true,
     features: [
       "15,000 images / month",
@@ -54,7 +54,7 @@ export const PLAN_TIERS = [
     price: 99,
     priceAnnual: 990,
     images: "50,000",
-    tagline: "High volume",
+    tagline: "Large catalogs",
     features: [
       "50,000 images / month",
       "Everything in Growth",
