@@ -7,28 +7,7 @@
 //   1. read the live subscription state (source of truth) to gate features, and
 //   2. send merchants to the hosted pricing page to subscribe or cancel.
 
-// Central, env-overridable billing config — change price/trial without editing
-// code. Set these in your environment (e.g. Coolify / .env):
-//   BILLING_AMOUNT=60          monthly price shown in the app
-//   BILLING_AMOUNT_YEARLY=600  yearly price shown in the app
-//   BILLING_YEARLY_ENABLED=true  set to "false" to hide the yearly option
-//   BILLING_TRIAL_DAYS=0       free-trial length shown in the app (0 = no trial)
-//   BILLING_PLAN_NAME=Basic    plan name
-//   BILLING_CURRENCY=USD       currency code
-//
-// IMPORTANT: Because this is Managed Pricing, the amount the merchant is
-// actually CHARGED and the real free-trial length come from the plan in the
-// Partner Dashboard — these env values only control what the app DISPLAYS (and
-// the fallback billing config). Keep them in sync with the Partner Dashboard plan.
 import { getPlanByName, FREE_PLAN } from "./plans.server";
-export const BILLING_CONFIG = {
-  planName: process.env.BILLING_PLAN_NAME || "Basic",
-  currency: process.env.BILLING_CURRENCY || "USD",
-  trialDays: Number(process.env.BILLING_TRIAL_DAYS ?? 0),
-  amount: Number(process.env.BILLING_AMOUNT ?? 60),
-  amountYearly: Number(process.env.BILLING_AMOUNT_YEARLY ?? 600),
-  yearlyEnabled: process.env.BILLING_YEARLY_ENABLED !== "false",
-};
 
 const INSTALLATION_QUERY = `#graphql
   query AppInstallation {
@@ -46,7 +25,11 @@ const CANCEL_MUTATION = `#graphql
     }
   }`;
 
-const FALLBACK_APP_HANDLE = "optipix-3";
+// SlimShot's app handle (the <handle> in admin.shopify.com/store/<store>/apps/<handle>).
+// Only used when the live currentAppInstallation lookup fails; normally the
+// handle comes from Shopify. Unset → merchants are sent to their Apps settings
+// instead, never to another app's pricing page.
+const FALLBACK_APP_HANDLE = process.env.SHOPIFY_APP_HANDLE || null;
 
 // Dev-only plan override. Development stores cannot approve PAID managed-pricing
 // subscriptions (Shopify restriction), so paid tiers can't be tested by
@@ -120,7 +103,9 @@ export async function getBillingStateCached(admin, shop) {
 // subscribe, change, or cancel their plan.
 export function managedPricingUrl(shop, appHandle) {
   const storeHandle = shop.replace(".myshopify.com", "");
-  return `https://admin.shopify.com/store/${storeHandle}/charges/${appHandle || FALLBACK_APP_HANDLE}/pricing_plans`;
+  const handle = appHandle || FALLBACK_APP_HANDLE;
+  if (!handle) return `https://admin.shopify.com/store/${storeHandle}/settings/apps`;
+  return `https://admin.shopify.com/store/${storeHandle}/charges/${handle}/pricing_plans`;
 }
 
 // App Bridge intercepts a 401 carrying this header and navigates the TOP frame

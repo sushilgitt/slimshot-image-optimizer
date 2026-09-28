@@ -1,47 +1,31 @@
-import { AppProvider } from "@shopify/shopify-app-react-router/react";
-import { useState } from "react";
-import { Form, useActionData, useLoaderData } from "react-router";
 import { login } from "../../shopify.server";
-import { loginErrorMessage } from "./error.server";
+import styles from "../_index/styles.module.css";
 
+// App Store apps must never ask merchants to type their myshopify.com domain
+// (requirement 2.3.1): install and shop identification come from OAuth and
+// session tokens. So there is no shop-domain form here. A request that already
+// carries ?shop= (e.g. from Shopify) is handed straight to OAuth; anything else
+// is told to open SlimShot from the Shopify admin.
 export const loader = async ({ request }) => {
-  const errors = loginErrorMessage(await login(request));
-
-  return { errors };
-};
-
-export const action = async ({ request }) => {
-  const errors = loginErrorMessage(await login(request));
-
-  return {
-    errors,
-  };
+  const url = new URL(request.url);
+  if (url.searchParams.get("shop")) {
+    // Throws a redirect into the OAuth flow for a valid shop.
+    await login(request);
+  }
+  return null;
 };
 
 export default function Auth() {
-  const loaderData = useLoaderData();
-  const actionData = useActionData();
-  const [shop, setShop] = useState("");
-  const { errors } = actionData || loaderData;
-
   return (
-    <AppProvider embedded={false}>
-      <s-page>
-        <Form method="post">
-          <s-section heading="Log in to SlimShot">
-            <s-text-field
-              name="shop"
-              label="Shop domain"
-              details="example.myshopify.com"
-              value={shop}
-              onChange={(e) => setShop(e.currentTarget.value)}
-              autocomplete="on"
-              error={errors.shop}
-            ></s-text-field>
-            <s-button type="submit">Log in</s-button>
-          </s-section>
-        </Form>
-      </s-page>
-    </AppProvider>
+    <main className={styles.index}>
+      <div className={styles.content}>
+        <p className={styles.eyebrow}>SlimShot for Shopify</p>
+        <h1 className={styles.heading}>Open SlimShot from your Shopify admin</h1>
+        <p className={styles.text}>
+          In your Shopify admin, go to <strong>Apps</strong> and choose <strong>SlimShot</strong>.
+          If you haven&apos;t installed it yet, install it from the Shopify App Store first.
+        </p>
+      </div>
+    </main>
   );
 }
